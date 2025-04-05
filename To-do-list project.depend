@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1743847877 source:c:\_repos\to-do-list-in-cpp\date.cpp
+	"date.h"
+
+1743847877 c:\_repos\to-do-list-in-cpp\date.h
+
+1743846768 source:c:\_repos\to-do-list-in-cpp\main.cpp
+	<iostream>
+	"date.h"
+
+1743849912 source:c:\_repos\to-do-list-in-cpp\task.cpp
+	"task.h"
+	"date.h"
+
+1743847973 c:\_repos\to-do-list-in-cpp\task.h
+	"date.h"
+	<string>
+
