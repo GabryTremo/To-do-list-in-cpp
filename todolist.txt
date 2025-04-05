@@ -1,0 +1,14 @@
+------------------------------
+Task
+
+Priority: not important
+Due date: 0/0/0
+Status: pending
+------------------------------
+------------------------------
+First new task
+
+Priority: low
+Due date: 12/3/2000
+Status: completed
+------------------------------

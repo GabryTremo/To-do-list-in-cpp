@@ -9,11 +9,11 @@ task::task()
     description = " ";
     due_date = Default_date;
     priority = 0;
-    status = true;
+    status = 1;
 
 }
 
-task::task(std::string Title, date Due_date, int Priority, bool Status)
+task::task(std::string Title, date Due_date, int Priority, int Status)
 {
     title = Title;
     description = " ";
@@ -22,7 +22,7 @@ task::task(std::string Title, date Due_date, int Priority, bool Status)
     status = Status;
 }
 
-task::task(std::string Title, std::string Description, date Due_date, int Priority, bool Status)
+task::task(std::string Title, std::string Description, date Due_date, int Priority, int Status)
 {
     title = Title;
     description = Description;

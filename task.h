@@ -9,8 +9,8 @@ class task
 {
     public:
         task();
-        task(std::string, date, int, bool);
-        task(std::string, std::string, date, int, bool);
+        task(std::string, date, int, int);
+        task(std::string, std::string, date, int, int);
 
         std::string Gettitle() { return title; }
         void Settitle(std::string val) { title = val; }
@@ -20,8 +20,9 @@ class task
         void Setdue_date(date val) { due_date = val; }
         int Getpriority() { return priority; }
         void Setpriority(int val) { priority = val; }
-        bool Getstatus() { return status; }
-        void Setstatus(bool val) { status = val; }
+        int Getstatus() { return status; }
+        void Setstatus(int val) { status = val; }
+
 
     protected:
 

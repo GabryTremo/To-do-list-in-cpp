@@ -4,15 +4,21 @@
 
 1743847877 c:\_repos\to-do-list-in-cpp\date.h
 
-1743846768 source:c:\_repos\to-do-list-in-cpp\main.cpp
+1743888470 source:c:\_repos\to-do-list-in-cpp\main.cpp
 	<iostream>
+	<string>
+	<vector>
+	<algorithm>
+	<map>
+	<fstream>
 	"date.h"
+	"task.h"
 
-1743849912 source:c:\_repos\to-do-list-in-cpp\task.cpp
+1743862410 source:c:\_repos\to-do-list-in-cpp\task.cpp
 	"task.h"
 	"date.h"
 
-1743847973 c:\_repos\to-do-list-in-cpp\task.h
+1743866564 c:\_repos\to-do-list-in-cpp\task.h
 	"date.h"
 	<string>
 
