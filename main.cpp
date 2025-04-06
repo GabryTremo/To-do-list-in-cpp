@@ -7,6 +7,8 @@
 
 #include <fstream>
 
+#include <ctime>
+
 #include "date.h"
 #include "task.h"
 
@@ -47,7 +49,7 @@ string int_to_status_name(int status_num){
 int status_name_to_int(string status_str){
     if (status_str == "expired"){ return -1;
     } else if (status_str == "completed"){ return 0;
-    } else if (status_str == "pending"){ return 2;
+    } else if (status_str == "pending"){ return 1;
     } else { return -1;
     }
 }
@@ -85,7 +87,8 @@ date string_to_date(string date_str){
     return data;
 }
 
-void fill_mmaps(std::multimap<int, task>& priority_mmap, std::multimap<int, task>& status_mmap){
+void fill_mmaps(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+                std::map<string, task>& title_map){
 
     std::ifstream input_file("todolist.txt");
 
@@ -125,6 +128,7 @@ void fill_mmaps(std::multimap<int, task>& priority_mmap, std::multimap<int, task
 
             priority_mmap.insert({tsk.Getpriority(), tsk});
             status_mmap.insert({tsk.Getstatus(), tsk});
+            title_map.insert({tsk.Gettitle(), tsk});
         }
         input_file.close();
     }
@@ -133,6 +137,9 @@ void fill_mmaps(std::multimap<int, task>& priority_mmap, std::multimap<int, task
     }
 
 }
+
+
+
 
 
 // Spiegazione: sovraccarica l'operatore << in modo da far stampare date nel modo voluto.
@@ -155,6 +162,89 @@ std::ostream& operator<<(std::ostream& out_stream, task& ts) {
     return out_stream;
 }
 
+void order_by_priority(std::multimap<int, task, std::greater<int>>& priority_mmap){
+
+    std::ofstream output_file("todolist.txt");
+
+    if (output_file.is_open()) {
+
+        for ( auto& pair : priority_mmap){
+            output_file << pair.second;
+        }
+
+    } else {
+        std::cerr << "Unable to open file\n";
+    }
+
+    output_file.flush();
+    output_file.close();
+
+}
+
+void order_by_status(std::multimap<int, task, std::greater<int>>& status_mmap){
+
+    std::ofstream output_file("todolist.txt");
+
+    if (output_file.is_open()) {
+
+        for ( auto& pair : status_mmap){
+            output_file << pair.second;
+        }
+
+    } else {
+        std::cerr << "Unable to open file\n";
+    }
+
+    output_file.flush();
+    output_file.close();
+
+}
+
+void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+              std::map<string, task>& title_map){
+    task ts;
+    date dt;
+    string input_line;
+    int input_num;
+
+    cout<<"Insert the task title: \n";
+    std::getline(cin, input_line);
+    ts.Settitle(input_line);
+
+    cout<<"Insert the task description, or press 0 for no description: \n";
+    std::getline(cin, input_line);
+    if (input_line != "0"){
+        ts.Setdescription(input_line);
+    }
+
+    cout<<"Insert the task priority, from 0 to 5: \n";
+    cin>>input_num;
+    ts.Setpriority(input_num);
+
+    cout<<"Insert the due date, in the format dd/mm/yyyy (insert the 3 numbers separately): \n";
+    cin>>input_num;
+    dt.Setday(input_num);
+    cin>>input_num;
+    dt.Setmonth(input_num);
+    cin>>input_num;
+    dt.Setyear(input_num);
+    ts.Setdue_date(dt);
+
+    if (dt.is_expired()==true){
+        ts.Setstatus(-1);
+    } else {
+        ts.Setstatus(1);
+    }
+
+    priority_mmap.insert({ts.Getpriority(), ts});
+    status_mmap.insert({ts.Getstatus(), ts});
+    title_map.insert({ts.Gettitle(), ts});
+
+}
+
+void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap){
+
+}
 
 int main()
 {
@@ -192,16 +282,24 @@ int main()
     };
     */
 
-    std::multimap<int, task> priority_mmap;
-    std::multimap<int, task> status_mmap;
+    std::multimap<int, task, std::greater<int>> priority_mmap;
+    std::multimap<int, task, std::greater<int>> status_mmap;
+    std::map<string, task> title_map;
 
-    fill_mmaps(priority_mmap, status_mmap);
+    fill_mmaps(priority_mmap, status_mmap, title_map);
 
+    add_task(priority_mmap,status_mmap, title_map);
+
+    order_by_priority(priority_mmap);
+    //order_by_status(status_mmap);
+
+
+
+    /*
     for ( auto& pair : priority_mmap){
         cout<<pair.second;
     }
-
-
+    */
 
 
 
