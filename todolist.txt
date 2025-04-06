@@ -1,16 +1,9 @@
 ------------------------------ 
-New task 2
- 
-Priority: high
-Due date: 12/7/2026
-Status: completed
------------------------------- 
------------------------------- 
 First new task
  
 Priority: low
 Due date: 12/3/2000
-Status: completed
+Status: pending
 ------------------------------ 
 ------------------------------ 
 Task
@@ -18,4 +11,11 @@ Task
 Priority: not important
 Due date: 0/0/0
 Status: pending
+------------------------------ 
+------------------------------ 
+lala
+ree
+Priority: high
+Due date: 2/2/2222
+Status: completed
 ------------------------------ 

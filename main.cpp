@@ -9,6 +9,8 @@
 
 #include <ctime>
 
+#include <limits>
+
 #include "date.h"
 #include "task.h"
 
@@ -28,7 +30,7 @@ string int_to_priority_name(int prio_num){
 
 int priority_name_to_int(string prio_str){
     if (prio_str == "not important"){ return 0;
-    } else if (prio_str == "very_low"){ return 1;
+    } else if (prio_str == "very low"){ return 1;
     } else if (prio_str == "low"){ return 2;
     } else if (prio_str == "medium"){ return 3;
     } else if (prio_str == "high"){ return 4;
@@ -176,6 +178,7 @@ void order_by_priority(std::multimap<int, task, std::greater<int>>& priority_mma
             output_file << pair.second;
         }
 
+
     } else {
         std::cerr << "Unable to open file\n";
     }
@@ -195,6 +198,7 @@ void order_by_status(std::multimap<int, task, std::greater<int>>& status_mmap){
             output_file << pair.second;
         }
 
+
     } else {
         std::cerr << "Unable to open file\n";
     }
@@ -213,6 +217,7 @@ void order_by_title(std::map<string, task>& title_map){
         for ( auto& pair : title_map){
             output_file << pair.second;
         }
+
 
     } else {
         std::cerr << "Unable to open file\n";
@@ -263,6 +268,7 @@ void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::m
     status_mmap.insert({ts.Getstatus(), ts});
     title_map.insert({ts.Gettitle(), ts});
 
+    order_by_priority(priority_mmap);
     cout<<"Task "<<ts.Gettitle()<<" has been added.\n";
 
 }
@@ -285,6 +291,8 @@ void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std
     order_by_title(title_map);
 
     fill_mmaps(priority_mmap, status_mmap, title_map);
+
+    order_by_priority(priority_mmap);
 
 }
 
@@ -312,66 +320,16 @@ void edit_status(std::multimap<int, task, std::greater<int>>& priority_mmap, std
 
         order_by_title(title_map);
         fill_mmaps(priority_mmap, status_mmap, title_map);
+        order_by_priority(priority_mmap);
 
 
     } else {
         cout<<"There is no task with that title... \n";
     }
-
-    /*
-    string input_title;
-     cout<<"Insert the title of the task you want to mark as completed: \n";
-     getline(cin, input_title);
-     auto iter = title_map.find(input_title);
-
-     if (iter != title_map.end()){
-        iter->second.Setstatus(0);
-
-        order_by_title(title_map);
-        fill_mmaps(priority_mmap, status_mmap, title_map);
-        cout<<"Task "<<input_title<<" has been marked as completed.\n";
-
-    } else {
-        cout<<"There is no task with that title... \n";
-    }
-    */
 }
 
 int main()
 {
-
-    /*
-    date new_date2;
-    cout<<new_date2.Getday()<<"\n";
-    date new_date = date(12,3,2025);
-    cout<<new_date.Getday()<<"\n";
-    cout<<new_date<<"\n";
-
-    task new_task;
-    cout<<new_task.Gettitle()<<"\n";
-    date date3 = new_task.Getdue_date();
-    cout<<date3<<"\n";
-
-    task new_task2 = task("First new task", date(12,3,2000), 2, 0);
-    cout<<new_task2.Gettitle()<<"\n";
-    date date4 = new_task2.Getdue_date();
-    cout<<date4<<"\n";
-
-
-    std::map<int , task> priority_map = {
-    {new_task.Getpriority(), new_task},
-    {new_task2.Getpriority(), new_task2}
-    };
-
-    for ( auto& pair : priority_map){
-        cout<<pair.second;
-    }
-
-    std::map<int , task> status_map = {
-    {new_task.Getstatus(), new_task},
-    {new_task2.Getstatus(), new_task2}
-    };
-    */
 
     std::multimap<int, task, std::greater<int>> priority_mmap;
     std::multimap<int, task, std::greater<int>> status_mmap;
@@ -379,28 +337,53 @@ int main()
 
     fill_mmaps(priority_mmap, status_mmap, title_map);
 
-    //edit_status(priority_mmap, status_mmap, title_map);
+    int selection;
+    int order_selection;
+    bool continue_check = true;
 
-    //add_task(priority_mmap,status_mmap, title_map);
+    while(continue_check == true){
+        cout<<"What do you want to do?\n1 : Add a task\n2 : Change the status of a task\n3 : Remove a task\n4 : Order tasks\n0 : Exit\n";
+        cin>>selection;
 
-    //delete_task(priority_mmap,status_mmap, title_map);
+        switch(selection){
+            case 1: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    add_task(priority_mmap,status_mmap, title_map);
+                    cout<<"The list has been ordered by priority\n";
+                    break;
+            case 2: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    edit_status(priority_mmap,status_mmap, title_map);
+                    cout<<"The list has been ordered by priority\n";
+                    break;
+            case 3: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    delete_task(priority_mmap,status_mmap, title_map);
+                    cout<<"The list has been ordered by priority\n";
+                    break;
+            case 4: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    cout<<"What order would you like?\n1 : By due date\n2 : By priority\n3 : By status\n4 : By title\n0 : Go back\n";
+                    cin>>order_selection;
 
-    //order_by_priority(priority_mmap);
-    //order_by_status(status_mmap);
-
-
-
-    /*
-    for ( auto& pair : priority_mmap){
-        cout<<pair.second;
+                    switch (order_selection){
+                        case 1: break; //da agiungere
+                        case 2: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                order_by_priority(priority_mmap);
+                                cout<<"The list has been ordered by priority\n";
+                                break;
+                        case 3: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                order_by_status(status_mmap);
+                                cout<<"The list has been ordered by status\n";
+                                break;
+                        case 4: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                order_by_title(title_map);
+                                cout<<"The list has been ordered by title\n";
+                                break;
+                        case 0: break;
+                        default: break;
+                    }
+                    break;
+            case 0: continue_check = false; break;
+            default: break;
+        }
     }
-    */
-
-
-
-
-
-
 
 
 
