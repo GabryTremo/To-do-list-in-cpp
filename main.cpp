@@ -16,6 +16,9 @@
 
 using std::cout, std::cin, std::string;
 
+
+
+
 string int_to_priority_name(int prio_num){
     switch (prio_num){
     case 0: return "not important"; break;
@@ -89,12 +92,33 @@ date string_to_date(string date_str){
     return data;
 }
 
+// Spiegazione: sovraccarica l'operatore << in modo da far stampare date nel modo voluto.
+// La corrente di output out_stream è passata per referenza perchè vogliamo cambiarla
+// senza copiarla.
+// La data dt viene passata per referenza perchè non vogliamo copiare una classe.
+// Infine, ritorna una referenza, ad esempio per concatenare date.
+std::ostream& operator<<(std::ostream& out_stream, date& dt) {
+    out_stream << dt.Getday() << "/" << dt.Getmonth() << "/" << dt.Getyear();
+    return out_stream;
+}
+
+std::ostream& operator<<(std::ostream& out_stream, task& ts) {
+    date task_date = ts.Getdue_date();
+    string prio_name = int_to_priority_name(ts.Getpriority());
+    string status_name = int_to_status_name(ts.Getstatus());
+    out_stream << "------------------------------ \n"<< ts.Gettitle() << "\n" <<
+    ts.Getdescription() << "\n" << "Priority: "<<prio_name<<"\n"<< "Due date: "<<task_date<<
+    "\nStatus: "<<status_name<<"\n------------------------------ \n";
+    return out_stream;
+}
+
 void fill_mmaps(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
-                std::map<string, task>& title_map){
+                std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
 
     priority_mmap.clear();
     status_mmap.clear();
     title_map.clear();
+    date_mmap.clear();
 
     std::ifstream input_file("todolist.txt");
 
@@ -135,6 +159,8 @@ void fill_mmaps(std::multimap<int, task, std::greater<int>>& priority_mmap, std:
             priority_mmap.insert({tsk.Getpriority(), tsk});
             status_mmap.insert({tsk.Getstatus(), tsk});
             title_map.insert({tsk.Gettitle(), tsk});
+            date_mmap.insert({tsk.Getdue_date(), tsk});
+
         }
         input_file.close();
     }
@@ -148,25 +174,7 @@ void fill_mmaps(std::multimap<int, task, std::greater<int>>& priority_mmap, std:
 
 
 
-// Spiegazione: sovraccarica l'operatore << in modo da far stampare date nel modo voluto.
-// La corrente di output out_stream è passata per referenza perchè vogliamo cambiarla
-// senza copiarla.
-// La data dt viene passata per referenza perchè non vogliamo copiare una classe.
-// Infine, ritorna una referenza, ad esempio per concatenare date.
-std::ostream& operator<<(std::ostream& out_stream, date& dt) {
-    out_stream << dt.Getday() << "/" << dt.Getmonth() << "/" << dt.Getyear();
-    return out_stream;
-}
 
-std::ostream& operator<<(std::ostream& out_stream, task& ts) {
-    date task_date = ts.Getdue_date();
-    string prio_name = int_to_priority_name(ts.Getpriority());
-    string status_name = int_to_status_name(ts.Getstatus());
-    out_stream << "------------------------------ \n"<< ts.Gettitle() << "\n" <<
-    ts.Getdescription() << "\n" << "Priority: "<<prio_name<<"\n"<< "Due date: "<<task_date<<
-    "\nStatus: "<<status_name<<"\n------------------------------ \n";
-    return out_stream;
-}
 
 void order_by_priority(std::multimap<int, task, std::greater<int>>& priority_mmap){
 
@@ -174,8 +182,8 @@ void order_by_priority(std::multimap<int, task, std::greater<int>>& priority_mma
 
     if (output_file.is_open()) {
 
-        for ( auto& pair : priority_mmap){
-            output_file << pair.second;
+        for ( auto& coppia : priority_mmap){
+            output_file << coppia.second;
         }
 
 
@@ -194,8 +202,8 @@ void order_by_status(std::multimap<int, task, std::greater<int>>& status_mmap){
 
     if (output_file.is_open()) {
 
-        for ( auto& pair : status_mmap){
-            output_file << pair.second;
+        for ( auto& coppia : status_mmap){
+            output_file << coppia.second;
         }
 
 
@@ -214,8 +222,30 @@ void order_by_title(std::map<string, task>& title_map){
 
     if (output_file.is_open()) {
 
-        for ( auto& pair : title_map){
-            output_file << pair.second;
+        for ( auto& coppia : title_map){
+            output_file << coppia.second;
+        }
+
+
+    } else {
+        std::cerr << "Unable to open file\n";
+    }
+
+    output_file.flush();
+    output_file.close();
+
+}
+
+void order_by_date(std::multimap<date, task, std::greater<date>>& date_mmap){
+
+    std::ofstream output_file("todolist.txt");
+
+
+    if (output_file.is_open()) {
+
+        for ( auto& coppia : date_mmap){
+            output_file << coppia.second;
+
         }
 
 
@@ -229,7 +259,7 @@ void order_by_title(std::map<string, task>& title_map){
 }
 
 void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
-              std::map<string, task>& title_map){
+              std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
     task ts;
     date dt;
     string input_line;
@@ -267,6 +297,7 @@ void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::m
     priority_mmap.insert({ts.Getpriority(), ts});
     status_mmap.insert({ts.Getstatus(), ts});
     title_map.insert({ts.Gettitle(), ts});
+    date_mmap.insert({ts.Getdue_date(), ts});
 
     order_by_priority(priority_mmap);
     cout<<"Task "<<ts.Gettitle()<<" has been added.\n";
@@ -274,7 +305,7 @@ void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::m
 }
 
 void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
-                 std::map<string, task>& title_map){
+                 std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
 
     string input_title;
 
@@ -290,14 +321,14 @@ void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std
 
     order_by_title(title_map);
 
-    fill_mmaps(priority_mmap, status_mmap, title_map);
+    fill_mmaps(priority_mmap, status_mmap, title_map, date_mmap);
 
     order_by_priority(priority_mmap);
 
 }
 
 void edit_status(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
-                 std::map<string, task>& title_map){
+                 std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
 
      string input_title;
      cout<<"Insert the title of the task of which you want to change the status (from pending to completed or vice versa): \n";
@@ -319,7 +350,7 @@ void edit_status(std::multimap<int, task, std::greater<int>>& priority_mmap, std
         }
 
         order_by_title(title_map);
-        fill_mmaps(priority_mmap, status_mmap, title_map);
+        fill_mmaps(priority_mmap, status_mmap, title_map, date_mmap);
         order_by_priority(priority_mmap);
 
 
@@ -328,53 +359,113 @@ void edit_status(std::multimap<int, task, std::greater<int>>& priority_mmap, std
     }
 }
 
+void update_expired(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+                    std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
+
+    int expired_count = 0;
+
+    for ( auto& coppia : title_map ){
+            if (coppia.second.is_expired() == true && coppia.second.Getstatus() != -1){
+                coppia.second.Setstatus(-1);
+                expired_count++;
+            }
+        }
+
+    if (expired_count != 0){
+        order_by_title(title_map);
+        fill_mmaps(priority_mmap, status_mmap, title_map, date_mmap);
+        order_by_priority(priority_mmap);
+        cout<<"Some tasks have expired...\nThe list has been ordered by priority.\n";
+    }
+
+
+}
+
+void delete_expired(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+                    std::map<string, task>& title_map, std::multimap<date, task, std::greater<date>>& date_mmap){
+
+    int expired_count = 0;
+
+    for (auto iter = title_map.begin(); iter != title_map.end();){
+            if (iter->second.Getstatus() == -1){
+                cout<<"Task "<<iter->second.Gettitle()<<" has been deleted.\n";
+                iter = title_map.erase(iter);
+                expired_count++;
+            } else {
+                iter++;
+            }
+
+        }
+
+    if (expired_count == 0){
+        cout<<"There were no expired tasks...\n";
+    } else{
+        order_by_title(title_map);
+        fill_mmaps(priority_mmap, status_mmap, title_map, date_mmap);
+        order_by_priority(priority_mmap);
+        cout<<"The list has been ordered by priority.\n";
+    }
+
+
+}
+
 int main()
 {
-
-    std::multimap<int, task, std::greater<int>> priority_mmap;
-    std::multimap<int, task, std::greater<int>> status_mmap;
-    std::map<string, task> title_map;
-
-    fill_mmaps(priority_mmap, status_mmap, title_map);
-
     int selection;
     int order_selection;
     bool continue_check = true;
 
+    std::multimap<int, task, std::greater<int>> priority_mmap;
+    std::multimap<int, task, std::greater<int>> status_mmap;
+    std::map<string, task> title_map;
+    std::multimap<date, task, std::greater<date>> date_mmap;
+
+    fill_mmaps(priority_mmap, status_mmap, title_map, date_mmap);
+
+    update_expired(priority_mmap, status_mmap, title_map, date_mmap);
+
     while(continue_check == true){
-        cout<<"What do you want to do?\n1 : Add a task\n2 : Change the status of a task\n3 : Remove a task\n4 : Order tasks\n0 : Exit\n";
+        cout<<"What do you want to do?\n1 : Add a task\n2 : Change the status of a task\n3 : Remove a task\n4 : Remove all expired tasks\n";
+        cout<<"5 : Order tasks\n0 : Exit\n";
         cin>>selection;
 
         switch(selection){
             case 1: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    add_task(priority_mmap,status_mmap, title_map);
-                    cout<<"The list has been ordered by priority\n";
+                    add_task(priority_mmap,status_mmap, title_map, date_mmap);
+                    cout<<"The list has been ordered by priority.\n";
                     break;
             case 2: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    edit_status(priority_mmap,status_mmap, title_map);
-                    cout<<"The list has been ordered by priority\n";
+                    edit_status(priority_mmap,status_mmap, title_map, date_mmap);
+                    cout<<"The list has been ordered by priority.\n";
                     break;
             case 3: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    delete_task(priority_mmap,status_mmap, title_map);
-                    cout<<"The list has been ordered by priority\n";
+                    delete_task(priority_mmap,status_mmap, title_map, date_mmap);
+                    cout<<"The list has been ordered by priority.\n";
                     break;
             case 4: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    delete_expired(priority_mmap,status_mmap, title_map, date_mmap);
+
+                    break;
+            case 5: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     cout<<"What order would you like?\n1 : By due date\n2 : By priority\n3 : By status\n4 : By title\n0 : Go back\n";
                     cin>>order_selection;
 
                     switch (order_selection){
-                        case 1: break; //da agiungere
+                        case 1: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                order_by_date(date_mmap);
+                                cout<<"The list has been ordered by due date.\n";
+                                break;
                         case 2: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                                 order_by_priority(priority_mmap);
-                                cout<<"The list has been ordered by priority\n";
+                                cout<<"The list has been ordered by priority.\n";
                                 break;
                         case 3: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                                 order_by_status(status_mmap);
-                                cout<<"The list has been ordered by status\n";
+                                cout<<"The list has been ordered by status.\n";
                                 break;
                         case 4: std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                                order_by_title(title_map);
-                                cout<<"The list has been ordered by title\n";
+                        order_by_title(title_map);
+                                cout<<"The list has been ordered by title.\n";
                                 break;
                         case 0: break;
                         default: break;

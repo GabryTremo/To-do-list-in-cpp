@@ -1,21 +1,7 @@
 ------------------------------ 
-First new task
+Ciao
  
-Priority: low
-Due date: 12/3/2000
+Priority: very low
+Due date: 22/2/2027
 Status: pending
------------------------------- 
------------------------------- 
-Task
- 
-Priority: not important
-Due date: 0/0/0
-Status: pending
------------------------------- 
------------------------------- 
-lala
-ree
-Priority: high
-Due date: 2/2/2222
-Status: completed
 ------------------------------ 

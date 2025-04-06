@@ -12,14 +12,14 @@ class date
         date();     // Costruttore default
         date(int, int, int);    //Costruttore regolare
 
-        int Getday() { return day; }
+        int Getday() const { return day; }
         void Setday(int val) { day = val; }
-        int Getmonth() { return month; }
+        int Getmonth() const { return month; }
         void Setmonth(int val) { month = val; }
-        int Getyear() { return year; }
+        int Getyear() const { return year; }
         void Setyear(int val) { year = val; }
 
-        bool operator<(date& other_date){
+        bool operator<( const date& other_date) const {
             if (Getyear() != other_date.Getyear()){
                 return Getyear()<other_date.Getyear();
             } else if (Getmonth() != other_date.Getmonth()){
@@ -27,6 +27,10 @@ class date
             } else {
                 return Getday()<other_date.Getday();
             }
+        }
+
+        bool operator>(const date& other_date) const {
+            return other_date < *this;
         }
 
         bool is_expired(){
