@@ -6,13 +6,6 @@ Due date: 12/7/2026
 Status: pending
 ------------------------------ 
 ------------------------------ 
-sa sa prova
-ehi
-Priority: medium
-Due date: 22/234/2222
-Status: pending
------------------------------- 
------------------------------- 
 First new task
  
 Priority: low

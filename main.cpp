@@ -90,6 +90,10 @@ date string_to_date(string date_str){
 void fill_mmaps(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
                 std::map<string, task>& title_map){
 
+    priority_mmap.clear();
+    status_mmap.clear();
+    title_map.clear();
+
     std::ifstream input_file("todolist.txt");
 
     if (input_file.is_open()) {
@@ -200,6 +204,25 @@ void order_by_status(std::multimap<int, task, std::greater<int>>& status_mmap){
 
 }
 
+void order_by_title(std::map<string, task>& title_map){
+
+    std::ofstream output_file("todolist.txt");
+
+    if (output_file.is_open()) {
+
+        for ( auto& pair : title_map){
+            output_file << pair.second;
+        }
+
+    } else {
+        std::cerr << "Unable to open file\n";
+    }
+
+    output_file.flush();
+    output_file.close();
+
+}
+
 void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
               std::map<string, task>& title_map){
     task ts;
@@ -240,9 +263,28 @@ void add_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::m
     status_mmap.insert({ts.Getstatus(), ts});
     title_map.insert({ts.Gettitle(), ts});
 
+    cout<<"Task "<<ts.Gettitle()<<" has been added.\n";
+
 }
 
-void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap){
+void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+                 std::map<string, task>& title_map){
+
+    string input_title;
+
+    cout<<"Insert the title of the task you want to delete: \n";
+    std::getline(cin, input_title);
+
+    if (title_map.count(input_title)==1){
+        title_map.erase(input_title);
+        cout<<"Task "<<input_title<<" has been deleted.\n";
+    } else {
+        cout<<"There is no task with that title... \n";
+    }
+
+    order_by_title(title_map);
+
+    fill_mmaps(priority_mmap, status_mmap, title_map);
 
 }
 
@@ -288,7 +330,9 @@ int main()
 
     fill_mmaps(priority_mmap, status_mmap, title_map);
 
-    add_task(priority_mmap,status_mmap, title_map);
+    //add_task(priority_mmap,status_mmap, title_map);
+
+    delete_task(priority_mmap,status_mmap, title_map);
 
     order_by_priority(priority_mmap);
     //order_by_status(status_mmap);
