@@ -34,11 +34,19 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="conversions.cpp" />
+		<Unit filename="conversions.h" />
 		<Unit filename="date.cpp" />
 		<Unit filename="date.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="operator_overloads.cpp" />
+		<Unit filename="operator_overloads.h" />
+		<Unit filename="order_changes.cpp" />
+		<Unit filename="order_changes.h" />
 		<Unit filename="task.cpp" />
 		<Unit filename="task.h" />
+		<Unit filename="task_manipulation.cpp" />
+		<Unit filename="task_manipulation.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

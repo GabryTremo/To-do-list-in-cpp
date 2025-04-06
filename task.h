@@ -2,20 +2,24 @@
 #define TASK_H
 
 #include "date.h"
+#include <iostream>
 #include <string>
+
+
+using std::cout, std::cin, std::string;
 
 
 class task
 {
     public:
         task();
-        task(std::string, date, int, int);
-        task(std::string, std::string, date, int, int);
+        task(string, date, int, int);
+        task(string, string, date, int, int);
 
-        std::string Gettitle() { return title; }
-        void Settitle(std::string val) { title = val; }
-        std::string Getdescription() { return description; }
-        void Setdescription(std::string val) { description = val; }
+        string Gettitle() { return title; }
+        void Settitle(string val) { title = val; }
+        string Getdescription() { return description; }
+        void Setdescription(string val) { description = val; }
         date Getdue_date() { return due_date; }
         void Setdue_date(date val) { due_date = val; }
         int Getpriority() { return priority; }
@@ -31,8 +35,8 @@ class task
     protected:
 
     private:
-        std::string title;
-        std::string description;
+        string title;
+        string description;
         date due_date;
         int priority;
         int status;

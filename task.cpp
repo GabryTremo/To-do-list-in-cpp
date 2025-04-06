@@ -1,6 +1,11 @@
 #include "task.h"
 #include "date.h"
 
+#include <iostream>
+#include <string>
+
+using std::cout, std::cin, std::string;
+
 date Default_date = date();
 
 task::task()
@@ -13,7 +18,7 @@ task::task()
 
 }
 
-task::task(std::string Title, date Due_date, int Priority, int Status)
+task::task(string Title, date Due_date, int Priority, int Status)
 {
     title = Title;
     description = " ";
@@ -22,7 +27,7 @@ task::task(std::string Title, date Due_date, int Priority, int Status)
     status = Status;
 }
 
-task::task(std::string Title, std::string Description, date Due_date, int Priority, int Status)
+task::task(string Title, string Description, date Due_date, int Priority, int Status)
 {
     title = Title;
     description = Description;
