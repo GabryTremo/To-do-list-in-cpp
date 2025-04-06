@@ -3,7 +3,7 @@ New task 2
  
 Priority: high
 Due date: 12/7/2026
-Status: pending
+Status: completed
 ------------------------------ 
 ------------------------------ 
 First new task

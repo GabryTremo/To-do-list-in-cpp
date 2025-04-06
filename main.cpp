@@ -288,6 +288,55 @@ void delete_task(std::multimap<int, task, std::greater<int>>& priority_mmap, std
 
 }
 
+void edit_status(std::multimap<int, task, std::greater<int>>& priority_mmap, std::multimap<int, task, std::greater<int>>& status_mmap,
+                 std::map<string, task>& title_map){
+
+     string input_title;
+     cout<<"Insert the title of the task of which you want to change the status (from pending to completed or vice versa): \n";
+     getline(cin, input_title);
+     auto iter = title_map.find(input_title);
+
+     if (iter != title_map.end()){
+        switch (iter->second.Getstatus()){
+            case 1: iter->second.Setstatus(0);
+                    cout<<"Task "<<input_title<<" has been marked as completed.\n";
+                    break;
+
+            case 0: iter->second.Setstatus(1);
+                    cout<<"Task "<<input_title<<" has been marked as pending.\n";
+                    break;
+
+            case -1: cout<<"The task is expired...\n"; break;
+            default: iter->second.Setstatus(1); break;
+        }
+
+        order_by_title(title_map);
+        fill_mmaps(priority_mmap, status_mmap, title_map);
+
+
+    } else {
+        cout<<"There is no task with that title... \n";
+    }
+
+    /*
+    string input_title;
+     cout<<"Insert the title of the task you want to mark as completed: \n";
+     getline(cin, input_title);
+     auto iter = title_map.find(input_title);
+
+     if (iter != title_map.end()){
+        iter->second.Setstatus(0);
+
+        order_by_title(title_map);
+        fill_mmaps(priority_mmap, status_mmap, title_map);
+        cout<<"Task "<<input_title<<" has been marked as completed.\n";
+
+    } else {
+        cout<<"There is no task with that title... \n";
+    }
+    */
+}
+
 int main()
 {
 
@@ -330,11 +379,13 @@ int main()
 
     fill_mmaps(priority_mmap, status_mmap, title_map);
 
+    //edit_status(priority_mmap, status_mmap, title_map);
+
     //add_task(priority_mmap,status_mmap, title_map);
 
-    delete_task(priority_mmap,status_mmap, title_map);
+    //delete_task(priority_mmap,status_mmap, title_map);
 
-    order_by_priority(priority_mmap);
+    //order_by_priority(priority_mmap);
     //order_by_status(status_mmap);
 
 

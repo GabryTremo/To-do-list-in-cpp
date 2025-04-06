@@ -23,6 +23,10 @@ class task
         int Getstatus() { return status; }
         void Setstatus(int val) { status = val; }
 
+        bool is_expired(){
+            return due_date.is_expired();
+        }
+
 
     protected:
 
@@ -31,7 +35,7 @@ class task
         std::string description;
         date due_date;
         int priority;
-        bool status;
+        int status;
 };
 
 #endif // TASK_H
