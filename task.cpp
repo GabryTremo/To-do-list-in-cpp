@@ -6,9 +6,9 @@
 
 using std::cout, std::cin, std::string;
 
-date Default_date = date();
+date Default_date = date();     // Per il costruttore default sarà usata la data default 00/00/0000
 
-task::task()
+task::task()    // Costruttore default
 {
     title = "Task";
     description = " ";
@@ -18,7 +18,7 @@ task::task()
 
 }
 
-task::task(string Title, date Due_date, int Priority, int Status)
+task::task(string Title, date Due_date, int Priority, int Status)   // Costruttore sovraccaricato, senza descrizione
 {
     title = Title;
     description = " ";
@@ -27,7 +27,7 @@ task::task(string Title, date Due_date, int Priority, int Status)
     status = Status;
 }
 
-task::task(string Title, string Description, date Due_date, int Priority, int Status)
+task::task(string Title, string Description, date Due_date, int Priority, int Status)   // Costruttore sovraccaricato, con descrizione
 {
     title = Title;
     description = Description;

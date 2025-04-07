@@ -6,6 +6,7 @@
 
 using std::cout, std::cin, std::string;
 
+// Per convertire il numero da 0 a 5 della priorità nelle stringhe corrispondenti
 string int_to_priority_name(int prio_num){
     switch (prio_num){
     case 0: return "not important"; break;
@@ -18,6 +19,7 @@ string int_to_priority_name(int prio_num){
     }
 }
 
+// Viceversa. Non si può fare con switch perche prende solo interi
 int priority_name_to_int(string prio_str){
     if (prio_str == "not important"){ return 0;
     } else if (prio_str == "very low"){ return 1;
@@ -29,6 +31,7 @@ int priority_name_to_int(string prio_str){
     }
 }
 
+// Per convertire il numero -1, 0 o 1 della priorità nelle stringhe corrispondenti
 string int_to_status_name(int status_num){
     switch (status_num){
     case -1: return "expired"; break;
@@ -38,6 +41,7 @@ string int_to_status_name(int status_num){
     }
 }
 
+// Viceversa. Non si può fare con switch perche prende solo interi
 int status_name_to_int(string status_str){
     if (status_str == "expired"){ return -1;
     } else if (status_str == "completed"){ return 0;
@@ -46,12 +50,14 @@ int status_name_to_int(string status_str){
     }
 }
 
+// Per convertire la stinga nella forma dd/mm/yyyy in un oggetto della classe date (quindi 3 interi)
 date string_to_date(string date_str){
     date data;
 
-    int position1 = date_str.find("/");
-    data.Setday(std::stoi(date_str.substr(0,position1)));
-    date_str.erase(0,position1+1);
+    // Nota: si può cancellare i pezzi della stringa perchè è passata per valore
+    int position1 = date_str.find("/");     // Restituisce l'iteratore che punta dove c'è la prima barra /
+    data.Setday(std::stoi(date_str.substr(0,position1)));   // Taglia la stringa fino alla prima barra, e la trasforma in int
+    date_str.erase(0,position1+1);      // Cancella la parte analizzata della stringa, per poter analizzare allo stesso modo il mese
 
     int position2 = date_str.find("/");
     data.Setmonth(std::stoi(date_str.substr(0,position2)));

@@ -12,10 +12,3 @@ Priority: very high
 Due date: 5/5/2025
 Status: pending
 ------------------------------ 
------------------------------- 
-Do a flip
-lol
-Priority: not important
-Due date: 7/4/2025
-Status: completed
------------------------------- 

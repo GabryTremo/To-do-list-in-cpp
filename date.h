@@ -7,8 +7,9 @@ class date
 {
     public:
         date();     // Costruttore default
-        date(int, int, int);    //Costruttore regolare
+        date(int, int, int);    // Costruttore sovraccaricato
 
+        // Getters e setters
         int Getday() const { return day; }
         void Setday(int val) { day = val; }
         int Getmonth() const { return month; }
@@ -16,6 +17,7 @@ class date
         int Getyear() const { return year; }
         void Setyear(int val) { year = val; }
 
+        // Sovraccarica l'operatore di confronto < per confronti più veloci tra date
         bool operator<( const date& other_date) const {
             if (Getyear() != other_date.Getyear()){
                 return Getyear()<other_date.Getyear();
@@ -26,10 +28,13 @@ class date
             }
         }
 
+        // Sovraccarica l'operatore di confronto > per confronti più veloci tra date.
+        // Nota: serve definire questo a parte per confronti automatici della mappa date_mmap
         bool operator>(const date& other_date) const {
             return other_date < *this;
         }
 
+        // Metodo che restituisce true se la data è passata
         bool is_expired();
 
     protected:
